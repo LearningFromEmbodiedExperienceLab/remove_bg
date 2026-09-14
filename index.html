@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>去底色</title>
+    <script>
+      document.documentElement.setAttribute(
+        'data-theme',
+        /^(dark|ink)$/.test(localStorage.getItem('ui-theme') || '') ? 'dark' : 'light'
+      );
+    </script>
+    <link rel="stylesheet" href="/src/app.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <div>
+          <p class="ui-kicker">REMOVE BG</p>
+          <h1 class="app-title">去底色</h1>
+          <p class="ui-hint">拾取背景色，一键生成透明 PNG</p>
+        </div>
+        <button id="themeToggle" class="ui-theme-toggle" type="button" aria-label="切换为深色模式">
+          <svg class="ui-icon" data-theme-icon="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="ui-icon" data-theme-icon="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+      </header>
+
+      <main class="app-workspace">
+        <aside class="ui-panel app-controls">
+          <section class="app-field">
+            <p class="ui-kicker">图片</p>
+            <div class="app-upload" id="uploadZone" tabindex="0" role="button" aria-label="上传图片">
+              <input type="file" id="fileInput" accept="image/*" hidden />
+              <div class="app-upload__inner" id="uploadPlaceholder">
+                <span class="app-upload__label">拖放或点击上传</span>
+                <span class="ui-hint">支持 JPG、PNG、WebP</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="app-field" id="colorSection" hidden>
+            <p class="ui-kicker">底色</p>
+            <div class="app-color">
+              <div class="app-color__swatch" id="colorSwatch" title="当前拾取的颜色"></div>
+              <div class="app-color__info">
+                <span class="app-color__hex ui-mono" id="colorHex">—</span>
+                <span class="ui-hint" id="colorHint">点击图片拾取底色</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="app-field" id="sliderSection" hidden>
+            <p class="ui-kicker">容差</p>
+            <div class="app-slider">
+              <input type="range" id="tolerance" min="0" max="120" value="32" aria-label="颜色容差" />
+              <span class="app-slider__value ui-mono" id="toleranceValue">32</span>
+            </div>
+            <p class="ui-hint">数值越大，去除的相近色越多</p>
+
+            <p class="ui-kicker app-field__gap">边缘柔化</p>
+            <div class="app-slider">
+              <input type="range" id="feather" min="0" max="40" value="8" aria-label="边缘柔化" />
+              <span class="app-slider__value ui-mono" id="featherValue">8</span>
+            </div>
+            <p class="ui-hint">让抠图边缘更自然</p>
+          </section>
+
+          <section class="app-actions" id="actionSection" hidden>
+            <button type="button" class="ui-button" id="previewBtn" disabled>预览效果</button>
+            <button type="button" class="ui-button ui-button--secondary" id="downloadBtn" disabled>
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              下载 PNG
+            </button>
+          </section>
+        </aside>
+
+        <div class="ui-panel app-canvas-pane">
+          <div class="app-tabs" id="canvasTabs" hidden>
+            <button type="button" class="app-tab app-tab--active" data-view="source">原图</button>
+            <button type="button" class="app-tab" data-view="result" id="resultTab" disabled>预览</button>
+          </div>
+
+          <div class="app-canvas-wrap" id="canvasWrapper">
+            <div class="app-canvas-empty ui-muted" id="canvasEmpty">
+              <p>上传图片后开始编辑</p>
+            </div>
+            <div class="app-canvas-stage" id="canvasStage" hidden>
+              <canvas id="sourceCanvas"></canvas>
+              <canvas id="resultCanvas" hidden></canvas>
+              <div class="app-eyedropper" id="eyedropperCursor" hidden></div>
+            </div>
+          </div>
+
+          <p class="ui-hint app-canvas-tip" id="canvasTip" hidden>
+            在图片上点击，拾取需要去除的底色
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

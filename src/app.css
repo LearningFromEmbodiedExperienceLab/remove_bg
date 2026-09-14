@@ -1,0 +1,276 @@
+@import url('../ui/ui.css');
+
+/* Application layout — colors via --ui-* tokens only */
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--ui-space-4) var(--ui-space-3) var(--ui-space-5);
+}
+
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  margin-bottom: var(--ui-space-3);
+}
+
+.app-title {
+  margin: var(--ui-space-1) 0 0;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.app-workspace {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--ui-space-3);
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .app-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+.app-controls {
+  padding: var(--ui-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+}
+
+.app-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+}
+
+.app-field__gap {
+  margin-top: var(--ui-space-2);
+}
+
+/* Upload */
+.app-upload {
+  border: 1px dashed var(--ui-line-strong);
+  border-radius: var(--ui-radius-md);
+  padding: var(--ui-space-3) var(--ui-space-2);
+  text-align: center;
+  cursor: pointer;
+  background: var(--ui-canvas);
+  transition: background var(--ui-duration) ease, border-color var(--ui-duration) ease;
+  outline: none;
+}
+
+.app-upload:hover,
+.app-upload:focus-visible {
+  border-color: var(--ui-fade);
+  background: var(--ui-soft);
+}
+
+.app-upload--dragover {
+  border-color: var(--ui-ink);
+  background: var(--ui-soft-hover);
+}
+
+.app-upload__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-upload__label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Color pick */
+.app-color {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.app-color__swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--ui-radius-md);
+  border: 1px solid var(--ui-line);
+  background: var(--ui-soft);
+  flex-shrink: 0;
+}
+
+.app-color__swatch--active {
+  outline: 2px solid var(--ui-ink);
+  outline-offset: 2px;
+}
+
+.app-color__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-color__hex {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Sliders */
+.app-slider {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.app-slider input[type='range'] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  background: var(--ui-line);
+}
+
+.app-slider input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ui-ink);
+  cursor: pointer;
+  border: 2px solid var(--ui-panel);
+}
+
+.app-slider input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ui-ink);
+  cursor: pointer;
+  border: 2px solid var(--ui-panel);
+}
+
+.app-slider__value {
+  font-size: 12px;
+  min-width: 2.5ch;
+  text-align: right;
+}
+
+/* Actions */
+.app-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+}
+
+/* Canvas pane */
+.app-canvas-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  overflow: hidden;
+}
+
+.app-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--ui-line);
+  background: var(--ui-soft);
+}
+
+.app-tab {
+  flex: 1;
+  padding: var(--ui-space-1) var(--ui-space-2);
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--ui-muted);
+  cursor: pointer;
+  transition: color var(--ui-duration) ease, background var(--ui-duration) ease;
+}
+
+.app-tab:hover:not(:disabled) {
+  color: var(--ui-ink);
+  background: var(--ui-soft-hover);
+}
+
+.app-tab--active {
+  color: var(--ui-ink);
+  background: var(--ui-panel);
+  box-shadow: inset 0 -2px 0 var(--ui-ink);
+}
+
+.app-tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.app-canvas-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-space-3);
+  min-height: 400px;
+  background: var(--ui-canvas);
+}
+
+.app-canvas-empty {
+  font-size: 13px;
+}
+
+.app-canvas-stage {
+  position: relative;
+  max-width: 100%;
+  max-height: 70vh;
+  line-height: 0;
+}
+
+.app-canvas-stage canvas {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: var(--ui-radius-md);
+  border: 1px solid var(--ui-line);
+  display: block;
+}
+
+#resultCanvas {
+  background-color: var(--ui-canvas);
+  background-image:
+    linear-gradient(45deg, var(--ui-line) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--ui-line) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--ui-line) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--ui-line) 75%);
+  background-size: 12px 12px;
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+}
+
+.app-canvas-stage--pick {
+  cursor: crosshair;
+}
+
+.app-eyedropper {
+  position: fixed;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--ui-panel);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px var(--ui-ink);
+  z-index: 100;
+}
+
+.app-canvas-tip {
+  padding: var(--ui-space-1) var(--ui-space-2);
+  text-align: center;
+  border-top: 1px solid var(--ui-line);
+  background: var(--ui-soft);
+}
