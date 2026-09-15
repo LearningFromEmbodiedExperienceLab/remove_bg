@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>去底色</title>
+    <title>图片工具</title>
     <script>
       document.documentElement.setAttribute(
         'data-theme',
@@ -16,9 +16,9 @@
     <div class="app">
       <header class="app-header">
         <div>
-          <p class="ui-kicker">REMOVE BG</p>
-          <h1 class="app-title">去底色</h1>
-          <p class="ui-hint">拾取背景色，一键生成透明 PNG</p>
+          <p class="ui-kicker">IT</p>
+          <h1 class="app-title">图片工具</h1>
+          <p class="ui-hint">去底色、裁剪、擦除，本地处理，导出透明 PNG</p>
         </div>
         <button id="themeToggle" class="ui-theme-toggle" type="button" aria-label="切换为深色模式">
           <svg class="ui-icon" data-theme-icon="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
@@ -39,62 +39,157 @@
             </div>
           </section>
 
-          <section class="app-field" id="colorSection" hidden>
-            <p class="ui-kicker">底色</p>
-            <div class="app-color">
-              <div class="app-color__swatch" id="colorSwatch" title="当前拾取的颜色"></div>
-              <div class="app-color__info">
-                <span class="app-color__hex ui-mono" id="colorHex">—</span>
-                <span class="ui-hint" id="colorHint">点击图片拾取底色</span>
+          <section class="app-field" id="imageStatus" hidden>
+            <p class="ui-hint" id="statusText"></p>
+            <button type="button" class="ui-button ui-button--ghost" id="restoreBtn">恢复原图</button>
+          </section>
+
+          <section class="app-field" id="toolSwitcher" hidden>
+            <p class="ui-kicker">工具</p>
+            <div class="ui-segment">
+              <button type="button" class="ui-segment__btn ui-segment__btn--active" data-tool="removeBg">去底色</button>
+              <button type="button" class="ui-segment__btn" data-tool="crop">裁剪</button>
+              <span class="app-tool-tip" id="eraserToolWrap">
+                <button type="button" class="ui-segment__btn" data-tool="eraser" id="eraserToolBtn" disabled>橡皮擦</button>
+                <span class="app-tool-tip__popup" id="eraserToolTip" role="tooltip" hidden>底色去除后才能使用橡皮擦</span>
+              </span>
+            </div>
+          </section>
+
+          <!-- Remove BG panel -->
+          <div id="removeBgPanel" hidden>
+            <section class="app-field">
+              <p class="ui-kicker">底色</p>
+              <div class="app-color">
+                <div class="app-color__swatch" id="colorSwatch" title="当前拾取的颜色"></div>
+                <div class="app-color__info">
+                  <span class="app-color__hex ui-mono" id="colorHex">—</span>
+                </div>
               </div>
-            </div>
-          </section>
-
-          <section class="app-field" id="sliderSection" hidden>
-            <p class="ui-kicker">容差</p>
-            <div class="app-slider">
-              <input type="range" id="tolerance" min="0" max="120" value="32" aria-label="颜色容差" />
-              <span class="app-slider__value ui-mono" id="toleranceValue">32</span>
-            </div>
-            <p class="ui-hint">数值越大，去除的相近色越多</p>
-
-            <p class="ui-kicker app-field__gap">边缘柔化</p>
-            <div class="app-slider">
-              <input type="range" id="feather" min="0" max="40" value="8" aria-label="边缘柔化" />
-              <span class="app-slider__value ui-mono" id="featherValue">8</span>
-            </div>
-            <p class="ui-hint">让抠图边缘更自然</p>
-          </section>
-
-          <section class="app-actions" id="actionSection" hidden>
-            <button type="button" class="ui-button" id="previewBtn" disabled>预览效果</button>
-            <button type="button" class="ui-button ui-button--secondary" id="downloadBtn" disabled>
-              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-              下载 PNG
-            </button>
-          </section>
-        </aside>
-
-        <div class="ui-panel app-canvas-pane">
-          <div class="app-tabs" id="canvasTabs" hidden>
-            <button type="button" class="app-tab app-tab--active" data-view="source">原图</button>
-            <button type="button" class="app-tab" data-view="result" id="resultTab" disabled>预览</button>
+              <button type="button" class="ui-button ui-button--secondary" id="pickColorBtn">拾取底色</button>
+              <p class="ui-hint app-color__hint" id="colorHint">点击按钮后在图片上选色</p>
+            </section>
+            <section class="app-field">
+              <p class="ui-kicker">范围</p>
+              <div class="ui-segment" id="scopeSegment">
+                <button type="button" class="ui-segment__btn ui-segment__btn--active" data-scope="connected">连通区域</button>
+                <button type="button" class="ui-segment__btn" data-scope="global">全局</button>
+              </div>
+              <p class="ui-hint" id="scopeHint">仅去除与点击位置相连的区域，避免误删主体内部同色</p>
+            </section>
+            <section class="app-field">
+              <p class="ui-kicker">容差</p>
+              <div class="app-slider">
+                <input type="range" id="tolerance" min="0" max="120" value="32" aria-label="颜色容差" />
+                <span class="app-slider__value ui-mono" id="toleranceValue">32</span>
+              </div>
+              <p class="ui-hint">数值越大，去除的相近色越多</p>
+              <p class="ui-kicker app-field__gap">边缘柔化</p>
+              <div class="app-slider">
+                <input type="range" id="feather" min="0" max="40" value="8" aria-label="边缘柔化" />
+                <span class="app-slider__value ui-mono" id="featherValue">8</span>
+              </div>
+              <p class="ui-hint">让抠图边缘更自然</p>
+            </section>
           </div>
 
+          <!-- Crop panel -->
+          <div id="cropPanel" hidden>
+            <section class="app-field">
+              <p class="ui-kicker">比例</p>
+              <div class="ui-chip-group" id="ratioGroup" role="group" aria-label="裁剪比例">
+                <button type="button" class="ui-chip ui-chip--active" data-ratio="free">自由</button>
+                <button type="button" class="ui-chip" data-ratio="1:1">1:1</button>
+                <button type="button" class="ui-chip" data-ratio="4:3">4:3</button>
+                <button type="button" class="ui-chip" data-ratio="3:4">3:4</button>
+                <button type="button" class="ui-chip" data-ratio="16:9">16:9</button>
+              </div>
+            </section>
+            <section class="app-field">
+              <p class="ui-kicker">形状</p>
+              <div class="ui-chip-group" id="shapeGroup" role="group" aria-label="裁剪形状">
+                <button type="button" class="ui-chip ui-chip--active" data-shape="rect">矩形</button>
+                <button type="button" class="ui-chip" data-shape="rounded">圆角</button>
+                <button type="button" class="ui-chip" data-shape="circle">圆形</button>
+              </div>
+            </section>
+            <section class="app-field">
+              <label class="ui-check">
+                <input type="checkbox" id="symmetricCrop" checked />
+                <span>自动对称（裁剪框居中，两侧等比缩放）</span>
+              </label>
+            </section>
+            <section class="app-field" id="cornerSection" hidden>
+              <p class="ui-kicker">圆角</p>
+              <div class="app-slider">
+                <input type="range" id="cornerRadius" min="0" max="120" value="24" aria-label="圆角半径" />
+                <span class="app-slider__value ui-mono" id="cornerRadiusValue">24</span>
+              </div>
+            </section>
+            <p class="ui-hint ui-mono" id="sizeLabel">—</p>
+          </div>
+
+          <!-- Eraser panel -->
+          <div id="eraserPanel" hidden>
+            <section class="app-field">
+              <p class="ui-kicker">笔刷大小</p>
+              <div class="app-slider">
+                <input type="range" id="brushSize" min="4" max="120" value="24" aria-label="笔刷大小" />
+                <span class="app-slider__value ui-mono" id="brushSizeValue">24</span>
+              </div>
+              <p class="ui-hint">去底色后使用，擦除残留背景或修复误删区域</p>
+            </section>
+            <section class="app-field">
+              <p class="ui-kicker">缩放</p>
+              <div class="app-slider">
+                <input type="range" id="eraserZoom" min="100" max="800" value="100" step="25" aria-label="画布缩放" />
+                <span class="app-slider__value ui-mono" id="eraserZoomValue">100%</span>
+              </div>
+              <p class="ui-hint">放大后按住滚轮拖动平移画布</p>
+            </section>
+            <section class="app-field">
+              <p class="ui-kicker">历史</p>
+              <div class="app-btn-row">
+                <button type="button" class="ui-button ui-button--secondary" id="eraserUndo" disabled>撤销</button>
+                <button type="button" class="ui-button ui-button--secondary" id="eraserRedo" disabled>反撤销</button>
+              </div>
+            </section>
+          </div>
+        </aside>
+
+        <div class="ui-panel app-canvas-pane" id="canvasPane">
           <div class="app-canvas-wrap" id="canvasWrapper">
             <div class="app-canvas-empty ui-muted" id="canvasEmpty">
               <p>上传图片后开始编辑</p>
             </div>
-            <div class="app-canvas-stage" id="canvasStage" hidden>
-              <canvas id="sourceCanvas"></canvas>
-              <canvas id="resultCanvas" hidden></canvas>
-              <div class="app-eyedropper" id="eyedropperCursor" hidden></div>
+            <div class="app-canvas-viewport" id="canvasViewport" hidden>
+              <div class="app-canvas-stage" id="canvasStage">
+                <div class="app-canvas-stack" id="canvasStack" role="presentation">
+                  <canvas id="mainCanvas"></canvas>
+                  <canvas id="overlayCanvas" class="app-layer-canvas" hidden></canvas>
+                </div>
+                <div class="app-eyedropper" id="eyedropper" hidden></div>
+                <div class="app-brush-cursor" id="brushCursor" hidden></div>
+              </div>
             </div>
           </div>
+          <div class="app-minimap" id="eraserMinimap" hidden>
+            <canvas id="minimapCanvas" class="app-minimap__canvas"></canvas>
+            <div class="app-minimap__viewport" id="minimapViewport"></div>
+          </div>
 
-          <p class="ui-hint app-canvas-tip" id="canvasTip" hidden>
-            在图片上点击，拾取需要去除的底色
-          </p>
+          <div class="app-export-bar" id="exportBar" hidden>
+            <div class="app-export-bar__left">
+              <button type="button" class="ui-button" id="applyBtn" disabled>应用</button>
+              <button type="button" class="ui-button ui-button--secondary" id="resetToolBtn">重置</button>
+            </div>
+            <button type="button" class="ui-button ui-button--secondary" id="downloadBtn">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              下载 PNG
+            </button>
+          </div>
+
+          <p class="ui-hint app-canvas-tip" id="canvasTip" hidden></p>
         </div>
       </main>
     </div>

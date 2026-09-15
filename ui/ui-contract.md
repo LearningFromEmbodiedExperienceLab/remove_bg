@@ -27,6 +27,6 @@ Do not put colors in components. Override theme values, not class rules.
 
 ## Components
 
-Use `ui-button`, `ui-button--secondary`, `ui-button--ghost`, `ui-panel`, `ui-hint`, `ui-kicker`, `ui-input`, `ui-textarea`, `ui-icon`, `ui-icon-button`, `ui-pane-heading`, `ui-pane-heading-meta`, `ui-prose`, and `ui-theme-toggle`.
+Use `ui-button`, `ui-button--secondary`, `ui-button--ghost`, `ui-panel`, `ui-hint`, `ui-kicker`, `ui-input`, `ui-textarea`, `ui-icon`, `ui-icon-button`, `ui-pane-heading`, `ui-pane-heading-meta`, `ui-prose`, `ui-segment`, `ui-segment__btn`, `ui-segment__btn--active`, `ui-chip-group`, `ui-chip`, `ui-chip--active`, and `ui-theme-toggle`.
 
 Open `example.html` for a product-neutral preview with a theme switch.
