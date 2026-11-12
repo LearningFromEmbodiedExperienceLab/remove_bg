@@ -1,8 +1,12 @@
+import { initI18n, localize, t } from './core/i18n.js';
 import { state, setImage, resetToOriginal, enableEraser, subscribe } from './core/state.js';
 import { $, fitCanvasToContainer, downloadCanvas, resetLayerCanvas } from './core/utils.js';
 import { createRemoveBgTool } from './tools/removeBg.js';
 import { createCropTool } from './tools/crop.js';
 import { createEraserTool } from './tools/eraser.js';
+import { initColorTool } from './tools/color.js';
+
+initI18n();
 
 const els = {
   uploadZone: $('#uploadZone'),
@@ -88,7 +92,7 @@ function updateStatus() {
     return;
   }
   els.imageStatus.hidden = false;
-  els.statusText.textContent = `当前：${state.current.width} × ${state.current.height}${state.edited ? ' · 已编辑' : ''}`;
+  localize(els.statusText, '当前：{width} × {height}{edited}', { width: state.current.width, height: state.current.height, edited: state.edited ? t(' · 已编辑') : '' });
 }
 
 function updateToolAccess() {
@@ -222,7 +226,7 @@ function initThemeToggle() {
   const root = document.documentElement;
   const isDark = () => root.getAttribute('data-theme') === 'dark';
   const sync = () => {
-    els.themeToggle.setAttribute('aria-label', isDark() ? '切换为浅色模式' : '切换为深色模式');
+    localize(els.themeToggle, isDark() ? '切换为浅色模式' : '切换为深色模式', {}, 'aria-label');
   };
   sync();
   els.themeToggle.addEventListener('click', () => {
@@ -305,8 +309,28 @@ subscribe(() => {
 });
 
 window.addEventListener('resize', () => {
-  if (state.current) fitAndRender();
+  if (state.current && !$('#editorWorkspace').hidden) fitAndRender();
 });
+
+document.addEventListener('languagechange', updateStatus);
 
 initThemeToggle();
 initEraserToolTip();
+initColorTool();
+
+document.querySelectorAll('[data-workspace]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const isColor = button.dataset.workspace === 'color';
+    if (button.getAttribute('aria-pressed') === 'true') return;
+    $('#editorWorkspace').hidden = isColor;
+    $('#colorWorkspace').hidden = !isColor;
+    document.querySelectorAll('[data-workspace]').forEach((tab) => {
+      const selected = tab === button;
+      tab.classList.toggle('ui-segment__btn--active', selected);
+      tab.setAttribute('aria-pressed', String(selected));
+    });
+    if (!isColor && state.current) {
+      fitAndRender();
+    }
+  });
+});

@@ -13,4 +13,8 @@
   --ui-page: #14130f;
   --ui-panel: #1e1d18;
   --ui-canvas: #18170f;
+  --ui-danger: #d7a19b;
+  --ui-danger-soft: #352624;
+  --ui-danger-line: #674a46;
+  --ui-danger-soft-hover: #44302d;
 }

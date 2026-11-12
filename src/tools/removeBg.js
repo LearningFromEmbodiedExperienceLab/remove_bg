@@ -1,3 +1,4 @@
+import { localize } from '../core/i18n.js';
 import { state, setCurrent } from '../core/state.js';
 import { rgbToHex, drawCanvasScaled } from '../core/utils.js';
 
@@ -129,20 +130,20 @@ export function createRemoveBgTool(els) {
     els.scopeBtns.forEach((btn) => {
       btn.classList.toggle('ui-segment__btn--active', btn.dataset.scope === mode);
     });
-    els.scopeHint.textContent =
+    localize(els.scopeHint,
       mode === 'connected'
         ? '仅去除与点击位置相连的区域，避免误删主体内部同色'
-        : '去除全图所有相近颜色，适合纯色背景';
+        : '去除全图所有相近颜色，适合纯色背景');
     if (hasPreview) render();
   }
 
   function setPickingMode(on) {
     pickingMode = on;
     els.pickColorBtn.classList.toggle('ui-button--pick-active', on);
-    els.pickColorBtn.textContent = on ? '取消拾取' : '拾取底色';
+    localize(els.pickColorBtn, on ? '取消拾取' : '拾取底色');
     els.canvasStage.classList.toggle('app-canvas-stage--pick', on);
     if (on) {
-      els.canvasTip.textContent = '在背景上点击要去除的颜色';
+      localize(els.canvasTip, '在背景上点击要去除的颜色');
       els.eyedropper.hidden = false;
     } else {
       els.eyedropper.hidden = true;
@@ -153,9 +154,9 @@ export function createRemoveBgTool(els) {
 
   function syncCanvasTip() {
     if (pickingMode) return;
-    els.canvasTip.textContent = hasPreview
+    localize(els.canvasTip, hasPreview
       ? '实时预览去底效果，透明区域以棋盘格显示'
-      : '点击「拾取底色」后在图片上选色';
+      : '点击「拾取底色」后在图片上选色');
   }
 
   function resetParams() {
@@ -166,7 +167,7 @@ export function createRemoveBgTool(els) {
     els.colorSwatch.style.background = '';
     els.colorSwatch.classList.remove('app-color__swatch--active');
     els.colorHex.textContent = '—';
-    els.colorHint.textContent = '点击按钮后在图片上选色';
+    localize(els.colorHint, '点击按钮后在图片上选色');
     els.tolerance.value = 32;
     els.toleranceValue.textContent = '32';
     els.feather.value = 8;
@@ -214,7 +215,7 @@ export function createRemoveBgTool(els) {
     els.colorSwatch.style.background = rgbToHex(...pickedColor);
     els.colorSwatch.classList.add('app-color__swatch--active');
     els.colorHex.textContent = rgbToHex(...pickedColor);
-    els.colorHint.textContent = '已拾取，调整参数后应用';
+    localize(els.colorHint, '已拾取，调整参数后应用');
     els.applyBtn.disabled = false;
     hasPreview = true;
     setPickingMode(false);

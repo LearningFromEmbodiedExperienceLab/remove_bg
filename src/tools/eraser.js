@@ -1,3 +1,4 @@
+import { localize } from '../core/i18n.js';
 import { state, setCurrent } from '../core/state.js';
 import { drawCanvasScaled, cloneCanvas } from '../core/utils.js';
 
@@ -268,7 +269,7 @@ export function createEraserTool(els) {
     els.panel.hidden = false;
     els.canvasStack.classList.add('app-canvas-stack--checker');
     els.canvasStage.classList.add('app-canvas-stage--erase');
-    els.canvasTip.textContent = '按住滚轮拖动画布；Ctrl+Z 撤销，Ctrl+Shift+Z 反撤销';
+    localize(els.canvasTip, '按住滚轮拖动画布；Ctrl+Z 撤销，Ctrl+Shift+Z 反撤销');
     computeBaseDisplay(state.current.width, state.current.height);
     updateViewport();
     loadWorkCanvas();
@@ -372,7 +373,7 @@ export function createEraserTool(els) {
   }
 
   function onKeyDown(e) {
-    if (!active) return;
+    if (!active || els.canvasPane.closest('[hidden]')) return;
     const mod = e.ctrlKey || e.metaKey;
     if (mod && e.key === 'z' && !e.shiftKey) {
       e.preventDefault();

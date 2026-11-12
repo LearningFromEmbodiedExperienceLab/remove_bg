@@ -1,31 +1,15 @@
-@import url('../ui/ui.css');
+@import url('../ui/assets/ui.css');
+@import url('./tools/color.css');
 
 /* Application layout — colors via --ui-* tokens only */
 
 .app {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--ui-space-4) var(--ui-space-3) var(--ui-space-5);
-}
-
-.app-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--ui-space-2);
-  margin-bottom: var(--ui-space-3);
-}
-
-.app-title {
-  margin: var(--ui-space-1) 0 0;
-  font-size: 28px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  padding-bottom: var(--ui-space-5);
 }
 
 .app-workspace {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 320px minmax(0, 1fr);
   gap: var(--ui-space-3);
   align-items: start;
 }
@@ -38,6 +22,7 @@
 
 .app-controls {
   padding: var(--ui-space-3);
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--ui-space-3);
@@ -254,7 +239,6 @@
   border-radius: var(--ui-radius-sm);
   pointer-events: none;
   z-index: 200;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .app-tool-tip__popup[hidden] {
@@ -312,7 +296,6 @@
   border: 1px solid var(--ui-line);
   border-radius: var(--ui-radius-sm);
   background: var(--ui-panel);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 10;
   line-height: 0;
   overflow: hidden;
@@ -452,4 +435,54 @@
   text-align: center;
   border-top: 1px solid var(--ui-line);
   background: var(--ui-soft);
+}
+
+/* Product layouts use the shared control sizes and spacing. */
+.app .ui-kicker,
+.app .ui-chip {
+  font-family: var(--ui-font);
+  letter-spacing: normal;
+}
+
+.app-mode {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.app .ui-segment__btn,
+.app .ui-chip {
+  min-height: var(--ui-control-height);
+}
+
+.app-mode .ui-segment__btn {
+  padding-inline: var(--ui-space-3);
+  white-space: nowrap;
+}
+
+.app-slider input[type='range'] {
+  min-width: 0;
+}
+
+.app-upload__inner {
+  overflow-wrap: anywhere;
+}
+
+.app-canvas-empty {
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .app-controls {
+    padding: 20px;
+  }
+
+  .app .ui-segment__btn,
+  .app .ui-chip {
+    min-height: 44px;
+  }
+
+  .app-export-bar,
+  .app-export-bar__left {
+    flex-wrap: wrap;
+  }
 }

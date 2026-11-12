@@ -1,3 +1,4 @@
+import { localize } from '../core/i18n.js';
 import { state, setCurrent } from '../core/state.js';
 import { drawCanvasScaled, roundRectPath, clamp, syncCanvasLayer, resetLayerCanvas } from '../core/utils.js';
 
@@ -427,7 +428,7 @@ export function createCropTool(els) {
     active = true;
     els.panel.hidden = false;
     els.overlayCanvas.hidden = false;
-    els.canvasTip.textContent = '拖动裁剪框或调整边角';
+    localize(els.canvasTip, '拖动裁剪框或调整边角');
     initCrop();
     render();
   }

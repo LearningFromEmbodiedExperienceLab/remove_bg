@@ -1,0 +1,242 @@
+.app-mode {
+  margin-bottom: 24px;
+}
+
+#editorWorkspace[hidden],
+#colorWorkspace[hidden] {
+  display: none;
+}
+
+.color-tool {
+  max-width: 584px;
+  padding: var(--ui-space-3);
+}
+
+.color-tool__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.color-tool__header h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.color-tool__header button {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.color-tool button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.color-tool__body {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: var(--ui-space-3);
+  margin-top: var(--ui-space-2);
+}
+
+.color-tool__palette,
+.color-tool__values {
+  min-width: 0;
+}
+
+.color-plane {
+  position: relative;
+  height: 156px;
+  border-radius: var(--ui-radius-md);
+  background-image: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.color-plane__cursor {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #0008;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.color-hue-label {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0 6px;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+
+.color-hue {
+  display: block;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+  cursor: pointer;
+}
+
+.color-hue::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 0 1px #0008;
+}
+
+.color-hue::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 0 1px #0008;
+}
+
+.color-opacity {
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--ui-muted);
+}
+
+.color-opacity input[type='range'] {
+  min-width: 0;
+}
+
+.color-opacity > div {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.color-opacity input[type='number'] {
+  width: 52px;
+  min-height: var(--ui-control-height);
+  padding: 2px 4px;
+  background: var(--ui-canvas);
+  font-size: 11px;
+}
+
+.color-opacity input[aria-invalid='true'] {
+  border-color: var(--ui-ink);
+  border-style: dashed;
+}
+
+.color-preview {
+  position: relative;
+  overflow: hidden;
+  background: repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 0 0 / 12px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 58px;
+  margin-top: var(--ui-space-2);
+  padding: 12px;
+  border: 1px solid #0001;
+  border-radius: var(--ui-radius-md);
+  font-size: 11px;
+}
+
+.color-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--preview-color);
+}
+
+.color-preview > span {
+  position: relative;
+}
+
+.color-preview .ui-mono {
+  font-size: 14px;
+}
+
+.color-value + .color-value {
+  margin-top: 8px;
+}
+
+.color-value label {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.color-value label span {
+  margin-left: 4px;
+  font-weight: 400;
+  color: var(--ui-muted);
+}
+
+.color-value > div {
+  display: flex;
+  gap: 4px;
+}
+
+.color-value input {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--ui-control-height);
+  padding: 5px 8px;
+  background: var(--ui-canvas);
+  font-size: 12px;
+}
+
+.color-value input[aria-invalid='true'] {
+  border-color: var(--ui-ink);
+  border-style: dashed;
+}
+
+.color-value button {
+  flex: none;
+  font-size: 20px;
+}
+
+#colorInputHint {
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.color-tool__status:empty {
+  display: none;
+}
+
+.color-tool__status {
+  margin-top: 12px;
+}
+
+@media (max-width: 540px) {
+  .color-tool {
+    padding: 20px;
+  }
+
+  .color-tool__body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .color-value input,
+  .color-opacity input[type='number'] {
+    min-height: 44px;
+  }
+}
