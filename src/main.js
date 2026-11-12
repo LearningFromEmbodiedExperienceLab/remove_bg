@@ -15,6 +15,9 @@ const els = {
   imageStatus: $('#imageStatus'),
   statusText: $('#statusText'),
   restoreBtn: $('#restoreBtn'),
+  compareBtn: $('#compareBtn'),
+  comparePreview: $('#comparePreview'),
+  compareCanvas: $('#compareCanvas'),
   toolSwitcher: $('#toolSwitcher'),
   eraserToolBtn: $('#eraserToolBtn'),
   eraserToolWrap: $('#eraserToolWrap'),
@@ -210,6 +213,7 @@ function loadImage(file) {
   reader.onload = (e) => {
     const img = new Image();
     img.onload = () => {
+      hideComparison();
       setImage(img, file.name);
       removeBgTool.reset();
       cropTool.reset();
@@ -221,6 +225,49 @@ function loadImage(file) {
   };
   reader.readAsDataURL(file);
 }
+
+function showComparison() {
+  if (!state.original || !els.comparePreview.hidden) return;
+  els.comparePreview.hidden = false;
+  els.compareBtn.setAttribute('aria-pressed', 'true');
+  els.brushCursor.hidden = true;
+  els.eyedropper.hidden = true;
+  const scale = Math.min(
+    1,
+    (els.comparePreview.clientWidth - 48) / state.original.width,
+    (els.comparePreview.clientHeight - 48) / state.original.height
+  );
+  els.compareCanvas.width = Math.max(1, Math.round(state.original.width * scale));
+  els.compareCanvas.height = Math.max(1, Math.round(state.original.height * scale));
+  els.compareCanvas.getContext('2d').drawImage(
+    state.original, 0, 0, els.compareCanvas.width, els.compareCanvas.height
+  );
+}
+
+function hideComparison() {
+  els.comparePreview.hidden = true;
+  els.compareBtn.setAttribute('aria-pressed', 'false');
+}
+
+els.compareBtn.addEventListener('pointerdown', (e) => {
+  if (e.button !== 0) return;
+  els.compareBtn.setPointerCapture(e.pointerId);
+  showComparison();
+});
+['pointerup', 'pointercancel', 'lostpointercapture', 'blur'].forEach((event) => {
+  els.compareBtn.addEventListener(event, hideComparison);
+});
+els.compareBtn.addEventListener('keydown', (e) => {
+  if (e.key !== ' ' && e.key !== 'Enter') return;
+  e.preventDefault();
+  showComparison();
+});
+els.compareBtn.addEventListener('keyup', (e) => {
+  if (e.key !== ' ' && e.key !== 'Enter') return;
+  e.preventDefault();
+  hideComparison();
+});
+window.addEventListener('blur', hideComparison);
 
 function initThemeToggle() {
   const root = document.documentElement;

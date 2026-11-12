@@ -207,6 +207,43 @@
   background: var(--ui-canvas);
 }
 
+.app-compare-preview {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-space-3);
+  background: var(--ui-canvas);
+  z-index: 1;
+}
+
+.app-compare-preview canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.app-compare-label {
+  position: absolute;
+  top: var(--ui-space-2);
+  left: var(--ui-space-2);
+  padding: 4px 8px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-panel);
+  color: var(--ui-ink);
+  font-size: 12px;
+}
+
+#compareBtn {
+  touch-action: none;
+  user-select: none;
+}
+
+#compareBtn[aria-pressed='true'] {
+  border-color: var(--ui-ink);
+  background: var(--ui-soft);
+}
+
 #toolSwitcher .ui-segment {
   overflow: visible;
 }

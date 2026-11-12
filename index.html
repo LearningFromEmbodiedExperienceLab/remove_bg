@@ -232,6 +232,10 @@
                 <div class="app-brush-cursor" id="brushCursor" hidden></div>
               </div>
             </div>
+            <div class="app-compare-preview" id="comparePreview" hidden>
+              <canvas id="compareCanvas" role="img" aria-label="原图" data-i18n-aria-label></canvas>
+              <span class="app-compare-label" data-i18n>原图</span>
+            </div>
           </div>
           <div class="app-minimap" id="eraserMinimap" hidden>
             <canvas id="minimapCanvas" class="app-minimap__canvas"></canvas>
@@ -242,6 +246,7 @@
             <div class="app-export-bar__left">
               <button type="button" class="ui-button" id="applyBtn" disabled data-i18n>应用</button>
               <button type="button" class="ui-button ui-button--secondary" id="resetToolBtn" data-i18n>重置</button>
+              <button type="button" class="ui-button ui-button--secondary" id="compareBtn" aria-pressed="false" title="按住查看原图，松开返回编辑效果" data-i18n-title data-i18n>按住对比</button>
             </div>
             <button type="button" class="ui-button ui-button--secondary" id="downloadBtn">
               <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
